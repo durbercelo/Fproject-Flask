@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <title>Обзоры книг</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header>
+        <h1>Обзоры и рецензии книг</h1>
+    </header>
+
+    <section class="book-review">
+        <article>
+            <h2>Мёртвые души</h2>
+            <p>Аферист скупал мёртвые души, чтобы заложить их государству и разбогатеть, но его афера раскрылась и ему пришлось скрыться. Затем он снова взялся за старое, опять был разоблачён и остался ни с чем.</p>
+            <p>Рейтинг: 4/5</p>
+        </article>
+
+        <article>
+            <h2>Герой нашего времени</h2>
+            <p>Разочарованный в жизни молодой офицер искал острых ощущений: покорял сердца женщин, вступал в смертельно опасные авантюры… Но его постоянно преследовала скука, и он не мог найти счастья и покоя.</p>
+            <p>Рейтинг: 5/5</p>
+        </article>
+    </section>
+</body>
+</html>
+
+<a href="about">Переход на другую страницу</a>
+
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container">
+    {% if current_user.is_authenticated %}
+      <p class="mt-5">Привет, {{ current_user.username }}!</p>
+      <a href="{{ url_for('profile') }}" class="btn btn-primary mt-3">Мой профиль</a>
+      <a href="{{ url_for('logout') }}" class="btn btn-secondary mt-3">Выход</a>
+    {% else %}
+      <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">
+              <h1 class="text-center">Добро пожаловать в Обзоры книг</h1>
+            </div>
+            <div class="card-body">
+              <p>Пожалуйста, <a href="{{ url_for('login') }}">войдите</a> или <a href="{{ url_for('register') }}">зарегистрируйтесь</a> для просмотра своего профиля.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}
