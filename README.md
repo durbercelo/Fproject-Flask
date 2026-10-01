@@ -1,34 +1,59 @@
 # Fproject
 
-Веб-приложение на Flask с SQLite, регистрацией и авторизацией пользователей, профилями и функционалом работы с книгами.
+Веб-приложение на **Flask** для работы с книгами, пользователями, отзывами и авторизацией.
 
-A Flask web application with SQLite, user registration and authentication, user profiles, and book management functionality.
-
----
-
-# 🇷🇺 Русская версия
-
-## 🚀 Версия
-
-**v1.0.0**
-
-### Основные изменения
-
-* добавлена поддержка Docker;
-* добавлен `docker-compose.yml`;
-* обновлена структура проекта;
-* HTML-шаблоны перенесены в `templates/`;
-* статические файлы перенесены в `static/`;
-* обновлены `app.py` и `models.py`;
-* добавлены страницы для работы с книгами.
+**Версия:** `v1.0.0`
 
 ---
 
-## 📋 Требования
+# 🇷🇺 Русский
 
-Для запуска рекомендуется использовать Docker.
+## О проекте
 
-Необходимы:
+**Fproject** — веб-приложение на Flask с системой регистрации и авторизации пользователей, каталогом книг, страницами отдельных книг и возможностью оставлять отзывы.
+
+Проект использует:
+
+* Python
+* Flask
+* Flask-SQLAlchemy
+* Flask-Login
+* SQLite
+* Docker / Docker Compose
+* HTML / CSS
+
+---
+
+## Возможности
+
+### 👤 Пользователи
+
+* регистрация;
+* вход и выход из аккаунта;
+* авторизация пользователей;
+* профиль пользователя;
+* хранение паролей в хешированном виде.
+
+### 📚 Книги
+
+* просмотр каталога книг;
+* просмотр отдельной книги;
+* добавление и редактирование книг;
+* работа с описанием и информацией о книгах.
+
+### ⭐ Отзывы
+
+* просмотр отзывов;
+* добавление отзывов авторизованными пользователями;
+* отображение отзывов на страницах книг.
+
+---
+
+## Запуск через Docker
+
+### Требования
+
+Для запуска необходимы:
 
 * Docker
 * Docker Compose
@@ -40,36 +65,36 @@ docker --version
 docker compose version
 ```
 
----
-
-## 📥 Установка
-
-Клонируйте репозиторий:
+### Клонирование
 
 ```bash
 git clone https://github.com/durbercelo/Fproject-Flask.git
 cd Fproject-Flask
 ```
 
----
+### Настройка SECRET_KEY
 
-## ⚙️ Конфигурация
+Приложение использует переменную окружения `SECRET_KEY`.
 
-Если проект использует переменные окружения, создайте файл `.env` в корневой директории проекта.
+В production рекомендуется хранить секрет отдельно от исходного кода.
 
-> **Важно:** `.env` не должен публиковаться в GitHub. Не храните в репозитории пароли, токены, API-ключи и другие секретные данные.
+Создайте файл `.env`:
 
----
+```env
+SECRET_KEY=your-secret-key
+```
 
-## 🐳 Запуск через Docker
+Не добавляйте `.env` в Git.
 
-Запустить приложение:
+> В текущей конфигурации `docker-compose.yml` переменная `SECRET_KEY` уже задана через `environment`. Перед публикацией проекта в открытый репозиторий рекомендуется заменить этот вариант на использование `.env` или Docker secrets.
+
+### Запуск
 
 ```bash
 docker compose up -d --build
 ```
 
-Проверить состояние контейнеров:
+Проверить контейнер:
 
 ```bash
 docker compose ps
@@ -81,25 +106,34 @@ docker compose ps
 docker compose logs -f
 ```
 
-Остановить приложение:
+Приложение внутри контейнера работает на:
 
-```bash
-docker compose down
+```text
+0.0.0.0:5000
 ```
+
+Docker публикует порт на localhost хоста:
+
+```text
+127.0.0.1:5000
+```
+
+Поэтому приложение доступно локально на сервере по адресу:
+
+```text
+http://127.0.0.1:5000
+```
+
+Если приложение необходимо открыть из интернета, рекомендуется использовать reverse proxy, например Nginx, перед Flask-приложением.
 
 ---
 
-## 🔄 Обновление
+## Обновление приложения
 
-Получить последнюю версию:
-
-```bash
-git pull origin main
-```
-
-Пересобрать и запустить приложение:
+После получения новых изменений:
 
 ```bash
+git pull
 docker compose up -d --build
 ```
 
@@ -111,78 +145,58 @@ docker compose ps
 
 ---
 
-## 🗄️ База данных
+## Остановка
 
-Приложение использует SQLite.
+```bash
+docker compose down
+```
 
-Основная база данных:
+---
+
+## База данных
+
+Проект использует SQLite.
+
+Основная база:
 
 ```text
 users.db
 ```
 
-При запуске через Docker база данных подключается к контейнеру через `docker-compose.yml`.
+В Docker база подключается через volume:
 
-> **Важно:** база данных содержит пользовательские данные и не должна публиковаться в публичном Git-репозитории.
+```yaml
+volumes:
+  - ./users.db:/opt/app/users.db
+```
 
-Резервные копии базы также не должны добавляться в Git.
+Это позволяет сохранять данные пользователей и книг независимо от пересоздания контейнера.
 
----
+**Важно:** файл `users.db` не должен добавляться в GitHub. Он исключён через `.gitignore`.
 
-## 👤 Пользователи
+Перед обновлением проекта рекомендуется создавать резервную копию базы:
 
-Приложение поддерживает:
-
-* регистрацию;
-* авторизацию;
-* выход из аккаунта;
-* профиль пользователя.
-
-Пароли хранятся в виде хэшей.
-
----
-
-## 📚 Книги
-
-Приложение поддерживает работу с книгами:
-
-* просмотр списка книг;
-* просмотр отдельной книги;
-* добавление книги;
-* редактирование книги.
-
-Основные шаблоны:
-
-```text
-templates/
-├── index.html
-├── book_detail.html
-├── book_form.html
-├── login.html
-├── register.html
-├── profile.html
-├── about.html
-└── base.html
+```bash
+cp users.db users_backup_$(date +%Y%m%d_%H%M%S).db
 ```
 
 ---
 
-## 📁 Структура проекта
+## Структура проекта
 
 ```text
 Fproject-Flask/
 ├── app.py
 ├── models.py
-├── create_db.py
 ├── docker-compose.yml
+├── Dockerfile
 ├── .gitignore
-│
+├── users.db
 ├── static/
 │   ├── about.css
 │   ├── custom.css
 │   ├── index.css
 │   └── default.jpg
-│
 └── templates/
     ├── about.html
     ├── base.html
@@ -196,139 +210,125 @@ Fproject-Flask/
 
 ---
 
-## 🔧 Запуск без Docker
+## Docker-команды
 
-Для разработки можно запустить приложение напрямую через Python.
-
-Создать виртуальное окружение:
+### Запуск
 
 ```bash
-python3 -m venv venv
+docker compose up -d --build
 ```
 
-Активировать его на Linux/macOS:
-
-```bash
-source venv/bin/activate
-```
-
-На Windows:
-
-```powershell
-venv\Scripts\activate
-```
-
-Установить зависимости:
-
-```bash
-pip install -r requirements.txt
-```
-
-Запустить приложение:
-
-```bash
-python3 app.py
-```
-
----
-
-## 🛠️ Полезные команды Docker
-
-Просмотр логов:
-
-```bash
-docker compose logs -f
-```
-
-Перезапуск:
-
-```bash
-docker compose restart
-```
-
-Остановка:
-
-```bash
-docker compose down
-```
-
-Пересборка без кэша:
-
-```bash
-docker compose build --no-cache
-```
-
-Запуск:
-
-```bash
-docker compose up -d
-```
-
-Проверка контейнеров:
+### Просмотр контейнеров
 
 ```bash
 docker compose ps
 ```
 
----
-
-## 🔒 Безопасность
-
-Не добавляйте в Git:
-
-* `.env`;
-* пароли;
-* API-ключи;
-* токены;
-* пользовательские базы данных;
-* резервные копии баз данных;
-* другие конфиденциальные данные.
-
-Эти файлы исключены через `.gitignore`.
-
----
-
-## 📌 Релиз
-
-Текущая версия:
-
-**v1.0.0**
-
-Репозиторий:
-
-https://github.com/durbercelo/Fproject-Flask
-
-Для использования конкретного релиза:
+### Логи
 
 ```bash
-git checkout v1.0.0
+docker compose logs -f flask
+```
+
+### Перезапуск
+
+```bash
+docker compose restart
+```
+
+### Остановка
+
+```bash
+docker compose down
+```
+
+### Пересборка
+
+```bash
+docker compose build --no-cache
+docker compose up -d
 ```
 
 ---
 
-# 🇬🇧 English Version
+## Безопасность
 
-## 🚀 Version
+Перед использованием проекта в production рекомендуется:
 
-**v1.0.0**
-
-### Main changes
-
-* added Docker support;
-* added `docker-compose.yml`;
-* updated project structure;
-* moved HTML templates to `templates/`;
-* moved static files to `static/`;
-* updated `app.py` and `models.py`;
-* added book management pages.
+1. Не хранить `SECRET_KEY` непосредственно в публичном `docker-compose.yml`.
+2. Использовать `.env` или Docker secrets.
+3. Не публиковать `users.db`.
+4. Регулярно создавать резервные копии базы данных.
+5. Использовать HTTPS.
+6. Размещать Flask за reverse proxy.
+7. Не использовать development-сервер Flask как публичный production-сервер.
 
 ---
 
-## 📋 Requirements
+## Версия
 
-Docker is recommended for running the application.
+Текущая версия:
 
-Required:
+```text
+v1.0.0
+```
+
+---
+
+## Лицензия
+
+Лицензия проекта пока не указана.
+
+---
+
+# 🇬🇧 English
+
+## About
+
+**Fproject** is a Flask-based web application with user registration and authentication, a book catalog, individual book pages, and user reviews.
+
+The project uses:
+
+* Python
+* Flask
+* Flask-SQLAlchemy
+* Flask-Login
+* SQLite
+* Docker / Docker Compose
+* HTML / CSS
+
+---
+
+## Features
+
+### 👤 Users
+
+* user registration;
+* login and logout;
+* user authentication;
+* user profiles;
+* hashed password storage.
+
+### 📚 Books
+
+* browse the book catalog;
+* view individual books;
+* add and edit books;
+* manage book descriptions and information.
+
+### ⭐ Reviews
+
+* view reviews;
+* authenticated users can add reviews;
+* reviews are displayed on book pages.
+
+---
+
+## Running with Docker
+
+### Requirements
+
+You need:
 
 * Docker
 * Docker Compose
@@ -340,36 +340,36 @@ docker --version
 docker compose version
 ```
 
----
-
-## 📥 Installation
-
-Clone the repository:
+### Clone the repository
 
 ```bash
 git clone https://github.com/durbercelo/Fproject-Flask.git
 cd Fproject-Flask
 ```
 
----
+### Configure SECRET_KEY
 
-## ⚙️ Configuration
+The application uses the `SECRET_KEY` environment variable.
 
-If the application uses environment variables, create a `.env` file in the project root.
+For production, the secret should be stored outside the source code.
 
-> **Important:** `.env` must not be published to GitHub. Do not store passwords, tokens, API keys, or other secrets in the repository.
+Create a `.env` file:
 
----
+```env
+SECRET_KEY=your-secret-key
+```
 
-## 🐳 Running with Docker
+Do not commit `.env` to Git.
 
-Start the application:
+> In the current configuration, `docker-compose.yml` defines `SECRET_KEY` directly under `environment`. Before publishing the project publicly, it is recommended to move the secret to `.env` or use Docker secrets.
+
+### Start the application
 
 ```bash
 docker compose up -d --build
 ```
 
-Check container status:
+Check the container:
 
 ```bash
 docker compose ps
@@ -381,25 +381,34 @@ View logs:
 docker compose logs -f
 ```
 
-Stop the application:
+The Flask application listens inside the container on:
 
-```bash
-docker compose down
+```text
+0.0.0.0:5000
 ```
+
+Docker publishes the port on the host as:
+
+```text
+127.0.0.1:5000
+```
+
+Therefore, the application is locally available on the server at:
+
+```text
+http://127.0.0.1:5000
+```
+
+If the application needs to be accessible from the Internet, a reverse proxy such as Nginx should be placed in front of the Flask application.
 
 ---
 
-## 🔄 Updating
+## Updating the application
 
-Pull the latest version:
-
-```bash
-git pull origin main
-```
-
-Rebuild and start the application:
+After pulling new changes:
 
 ```bash
+git pull
 docker compose up -d --build
 ```
 
@@ -411,9 +420,17 @@ docker compose ps
 
 ---
 
-## 🗄️ Database
+## Stopping
 
-The application uses SQLite.
+```bash
+docker compose down
+```
+
+---
+
+## Database
+
+The project uses SQLite.
 
 Main database:
 
@@ -421,68 +438,40 @@ Main database:
 users.db
 ```
 
-When running with Docker, the database is mounted into the container through `docker-compose.yml`.
+Docker mounts the database using:
 
-> **Important:** the database contains user data and must not be published to a public Git repository.
+```yaml
+volumes:
+  - ./users.db:/opt/app/users.db
+```
 
-Database backups should not be committed to Git either.
+This keeps the application data on the host independently of the container lifecycle.
 
----
+**Important:** `users.db` should not be committed to GitHub. It is excluded through `.gitignore`.
 
-## 👤 Users
+Create a database backup before updating:
 
-The application supports:
-
-* user registration;
-* authentication;
-* logout;
-* user profiles.
-
-Passwords are stored as hashes.
-
----
-
-## 📚 Books
-
-The application provides book management functionality:
-
-* browse books;
-* view individual books;
-* add books;
-* edit books.
-
-Main templates:
-
-```text
-templates/
-├── index.html
-├── book_detail.html
-├── book_form.html
-├── login.html
-├── register.html
-├── profile.html
-├── about.html
-└── base.html
+```bash
+cp users.db users_backup_$(date +%Y%m%d_%H%M%S).db
 ```
 
 ---
 
-## 📁 Project Structure
+## Project structure
 
 ```text
 Fproject-Flask/
 ├── app.py
 ├── models.py
-├── create_db.py
 ├── docker-compose.yml
+├── Dockerfile
 ├── .gitignore
-│
+├── users.db
 ├── static/
 │   ├── about.css
 │   ├── custom.css
 │   ├── index.css
 │   └── default.jpg
-│
 └── templates/
     ├── about.html
     ├── base.html
@@ -496,116 +485,71 @@ Fproject-Flask/
 
 ---
 
-## 🔧 Running Without Docker
+## Docker commands
 
-For development, the application can be run directly with Python.
-
-Create a virtual environment:
+### Start
 
 ```bash
-python3 -m venv venv
+docker compose up -d --build
 ```
 
-Activate it on Linux/macOS:
-
-```bash
-source venv/bin/activate
-```
-
-On Windows:
-
-```powershell
-venv\Scripts\activate
-```
-
-Install dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-Run the application:
-
-```bash
-python3 app.py
-```
-
----
-
-## 🛠️ Useful Docker Commands
-
-View logs:
-
-```bash
-docker compose logs -f
-```
-
-Restart:
-
-```bash
-docker compose restart
-```
-
-Stop:
-
-```bash
-docker compose down
-```
-
-Rebuild without cache:
-
-```bash
-docker compose build --no-cache
-```
-
-Start:
-
-```bash
-docker compose up -d
-```
-
-Check containers:
+### Check containers
 
 ```bash
 docker compose ps
 ```
 
----
-
-## 🔒 Security
-
-Do not commit the following to Git:
-
-* `.env`;
-* passwords;
-* API keys;
-* tokens;
-* user databases;
-* database backups;
-* other confidential information.
-
-These files are excluded through `.gitignore`.
-
----
-
-## 📌 Release
-
-Current version:
-
-**v1.0.0**
-
-Repository:
-
-https://github.com/durbercelo/Fproject-Flask
-
-To use a specific release:
+### View logs
 
 ```bash
-git checkout v1.0.0
+docker compose logs -f flask
+```
+
+### Restart
+
+```bash
+docker compose restart
+```
+
+### Stop
+
+```bash
+docker compose down
+```
+
+### Rebuild
+
+```bash
+docker compose build --no-cache
+docker compose up -d
 ```
 
 ---
 
-## 📄 License
+## Security
 
-If the project uses a specific license, add a `LICENSE` file to the repository and specify the license here.
+Before using the project in production:
+
+1. Do not store `SECRET_KEY` directly in a public `docker-compose.yml`.
+2. Use `.env` or Docker secrets.
+3. Do not publish `users.db`.
+4. Create regular database backups.
+5. Use HTTPS.
+6. Run Flask behind a reverse proxy.
+7. Do not expose Flask's development server directly to the public Internet.
+
+---
+
+## Version
+
+Current version:
+
+```text
+v1.0.0
+```
+
+---
+
+## License
+
+No project license has been specified yet.
