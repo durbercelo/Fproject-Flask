@@ -1,0 +1,13 @@
+.env
+__pycache__/
+*.pyc
+
+*.db
+*.sqlite
+*.sqlite3
+
+*_backup/
+*.backup
+
+static_backup_*/
+templates_backup_*/

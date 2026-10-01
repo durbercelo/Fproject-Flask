@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}О проекте — FProject{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='about.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="about-page">
+
+        <div class="about-header">
+
+            <div class="about-icon">
+                <i class="fa fa-book"></i>
+            </div>
+
+            <h1>О проекте</h1>
+
+            <p>
+                FProject — учебное веб-приложение,
+                созданное с использованием Python и Flask.
+            </p>
+
+        </div>
+
+
+        <div class="about-card">
+
+            <h2>Что это такое?</h2>
+
+            <p>
+                Этот проект представляет собой небольшое веб-приложение
+                для просмотра обзоров и рецензий книг.
+            </p>
+
+            <p>
+                Пользователи могут зарегистрироваться, войти в свой
+                аккаунт и получить доступ к персональной странице.
+            </p>
+
+        </div>
+
+
+        <div class="about-card">
+
+            <h2>Используемые технологии</h2>
+
+            <div class="tech-list">
+
+                <div class="tech-item">
+                    <i class="fa fa-code"></i>
+                    <span>Python</span>
+                </div>
+
+                <div class="tech-item">
+                    <i class="fa fa-flask"></i>
+                    <span>Flask</span>
+                </div>
+
+                <div class="tech-item">
+                    <i class="fa fa-database"></i>
+                    <span>SQLite</span>
+                </div>
+
+                <div class="tech-item">
+                    <i class="fa fa-css3"></i>
+                    <span>HTML / CSS</span>
+                </div>
+
+                <div class="tech-item">
+                    <i class="fa fa-user"></i>
+                    <span>Flask-Login</span>
+                </div>
+
+                <div class="tech-item">
+                    <i class="fa fa-database"></i>
+                    <span>SQLAlchemy</span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="about-card">
+
+            <h2>Навигация</h2>
+
+            <p>
+                Используйте меню сверху, чтобы перейти между разделами сайта.
+            </p>
+
+            <div class="about-buttons">
+
+                <a
+                    href="{{ url_for('index') }}"
+                    class="btn btn-primary"
+                >
+                    <i class="fa fa-home"></i>
+                    На главную
+                </a>
+
+                {% if current_user.is_authenticated %}
+
+                    <a
+                        href="{{ url_for('profile') }}"
+                        class="btn btn-outline-primary"
+                    >
+                        <i class="fa fa-user"></i>
+                        Мой профиль
+                    </a>
+
+                {% else %}
+
+                    <a
+                        href="{{ url_for('login') }}"
+                        class="btn btn-outline-primary"
+                    >
+                        <i class="fa fa-sign-in"></i>
+                        Войти
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

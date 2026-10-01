@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+{% block title %}Мой профиль — FProject{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <!-- Информация о пользователе -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-8">
+
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-body text-center p-4">
+
+                    <img
+                        src="{{ url_for('static', filename='default.jpg') }}"
+                        class="rounded-circle mb-3"
+                        alt="Фото профиля"
+                        width="110"
+                        height="110"
+                        style="object-fit: cover;"
+                    >
+
+                    <h1 class="h3 mb-2">
+                        {{ user.username }}
+                    </h1>
+
+                    <p class="text-muted mb-3">
+                        {{ user.email }}
+                    </p>
+
+                    <div class="d-flex justify-content-center gap-2 flex-wrap">
+
+                        <a href="{{ url_for('create_book') }}"
+                           class="btn btn-primary">
+                            <i class="fa fa-plus"></i>
+                            Добавить книгу
+                        </a>
+
+                        <a href="{{ url_for('logout') }}"
+                           class="btn btn-outline-secondary">
+                            <i class="fa fa-sign-out"></i>
+                            Выйти
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- Книги пользователя -->
+    <div class="books-section">
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+
+            <div>
+                <h2 class="h3 fw-bold mb-1">
+                    Мои книги
+                </h2>
+
+                <p class="text-muted mb-0">
+                    Добавлено книг: {{ books|length }}
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="row g-4">
+
+            {% for book in books %}
+
+                <div class="col-md-6 col-lg-4">
+
+                    <article class="book-card h-100">
+
+                        <div class="book-icon">
+                            <i class="fa fa-book"></i>
+                        </div>
+
+                        <div class="book-content">
+
+                            <h3>{{ book.title }}</h3>
+
+                            <p>
+                                <strong>Автор:</strong>
+                                {{ book.author }}
+                            </p>
+
+                            <p>
+                                {{ book.description[:150] }}
+                                {% if book.description|length > 150 %}...{% endif %}
+                            </p>
+
+                            <a href="{{ url_for('book_detail', book_id=book.id) }}"
+                               class="btn btn-outline-primary">
+                                Подробнее
+                            </a>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+            {% else %}
+
+                <div class="col-12">
+
+                    <div class="text-center p-5 bg-light rounded-4">
+
+                        <i class="fa fa-book fa-3x text-muted mb-3"></i>
+
+                        <h3 class="h5">
+                            Вы пока не добавили ни одной книги
+                        </h3>
+
+                        <p class="text-muted">
+                            Добавьте первую книгу, чтобы она появилась здесь.
+                        </p>
+
+                        <a href="{{ url_for('create_book') }}"
+                           class="btn btn-primary">
+                            Добавить первую книгу
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+

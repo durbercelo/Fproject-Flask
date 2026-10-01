@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body p-4">
+                    <h1 class="mb-2">{{ book.title }}</h1>
+                    <h5 class="text-muted mb-3">Автор: {{ book.author }}</h5>
+
+                    <p>{{ book.description }}</p>
+
+                    <p class="mb-3">
+                        <strong>Средняя оценка:</strong>
+                        {% if average_rating %}
+                            {{ "%.1f"|format(average_rating) }} / 5
+                        {% else %}
+                            Пока нет оценок
+                        {% endif %}
+                    </p>
+
+                    {% if current_user.is_authenticated and book.creator_id == current_user.id %}
+                    <div class="d-flex gap-2">
+                        <a href="{{ url_for('edit_book', book_id=book.id) }}"
+                           class="btn btn-warning">Редактировать</a>
+
+                        <form method="POST"
+                              action="{{ url_for('delete_book', book_id=book.id) }}"
+                              onsubmit="return confirm('Удалить эту книгу?');">
+                            <button type="submit" class="btn btn-danger">
+                                Удалить
+                            </button>
+                        </form>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body p-4">
+                    <h3 class="mb-3">Оставить отзыв</h3>
+
+                    {% if current_user.is_authenticated %}
+                    <form method="POST"
+                          action="{{ url_for('add_review', book_id=book.id) }}">
+                        <div class="mb-3">
+                            <label for="rating" class="form-label">Оценка</label>
+                            <select class="form-select" name="rating" id="rating" required>
+                                <option value="5">5 — Отлично</option>
+                                <option value="4">4 — Хорошо</option>
+                                <option value="3">3 — Нормально</option>
+                                <option value="2">2 — Плохо</option>
+                                <option value="1">1 — Очень плохо</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="text" class="form-label">Ваш отзыв</label>
+                            <textarea class="form-control" name="text" id="text"
+                                      rows="4" required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            Опубликовать отзыв
+                        </button>
+                    </form>
+                    {% else %}
+                    <p>
+                        Чтобы оставить отзыв,
+                        <a href="{{ url_for('login') }}">войдите в аккаунт</a>.
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <h3 class="mb-3">Отзывы читателей</h3>
+
+            {% for review in reviews %}
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <strong>{{ review.user.username }}</strong>
+                        <span class="text-warning">{{ review.rating }} / 5</span>
+                    </div>
+                    <p class="mt-3 mb-1">{{ review.text }}</p>
+                    <small class="text-muted">
+                        {{ review.date.strftime('%d.%m.%Y') if review.date else '' }}
+                    </small>
+                </div>
+            </div>
+            {% else %}
+            <p class="text-muted">Пока отзывов нет. Будьте первым!</p>
+            {% endfor %}
+
+            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary mt-3">
+                Вернуться к книгам
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h2 class="mb-4">
+                        {% if book %}Редактирование книги{% else %}Добавить книгу{% endif %}
+                    </h2>
+
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Название книги</label>
+                            <input type="text" class="form-control" id="title"
+                                   name="title" maxlength="150" required
+                                   value="{{ book.title if book else '' }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="author" class="form-label">Автор</label>
+                            <input type="text" class="form-control" id="author"
+                                   name="author" maxlength="100" required
+                                   value="{{ book.author if book else '' }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Описание</label>
+                            <textarea class="form-control" id="description"
+                                      name="description" rows="6" required>{{ book.description if book else '' }}</textarea>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                Сохранить
+                            </button>
+                            <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                                Отмена
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
