@@ -81,7 +81,7 @@ cd Fproject-Flask
 Создайте файл `.env`:
 
 ```env
-SECRET_KEY=your-secret-key
+sudo sh -c 'echo "SECRET_KEY=$(openssl rand -hex 32)" > .env'
 ```
 
 Не добавляйте `.env` в Git.
@@ -356,7 +356,7 @@ For production, the secret should be stored outside the source code.
 Create a `.env` file:
 
 ```env
-SECRET_KEY=your-secret-key
+sudo sh -c 'echo "SECRET_KEY=$(openssl rand -hex 32)" > .env'
 ```
 
 Do not commit `.env` to Git.
